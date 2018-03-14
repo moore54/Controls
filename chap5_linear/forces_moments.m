@@ -102,7 +102,7 @@ function out = forces_moments(x, delta, wind, P)
    C_Z_delta_e_alpha = -P.C_D_delta_e*sin(alpha) - P.C_L_delta_e*cos(alpha);
    
     % compute external forces and torques on aircraft
-    
+    % Gravity force is in the X DIRECTION !!!
     grav_force_x = P.mass*P.gravity*(cos(theta)*cos(psi));
     grav_force_y = P.mass*P.gravity*(sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi));
     grav_force_z = P.mass*P.gravity*(cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi));
