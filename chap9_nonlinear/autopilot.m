@@ -657,8 +657,11 @@ end
 
 %         chi_c = 0.0
         phi_c   = course_hold(chi_c, chi, r,P,myflag,TOL_Error*10);
+        % !!!!!!!! GRAVITY IN X DIRECTION, NO THROTTLE !!!!!!!!
+%         theta_c = airspeed_with_pitch_hold(Va_c, Va,0, P,myflag,TOL_Error);
         theta_c = altitude_hold(h_c, h,0, P,myflag,TOL_Error);
-        delta_t = airspeed_with_throttle_hold(Va_c, Va,0, P,myflag,TOL_Error);
+%         delta_t = airspeed_with_throttle_hold(Va_c, Va,0, P,myflag,TOL_Error);
+        delta_t = 0.0;
         
         
         delta_a = roll_hold(phi_c, phi, p, P,myflag,TOL_Error);

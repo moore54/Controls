@@ -156,7 +156,7 @@ P.tau = 0.05;
 
 %%%% ROLL (phi) %%%%
 
-P.delta_a_max = 30*pi/180;
+P.delta_a_max = 60*pi/180;
 P.e_phi_max = 20*pi/180;
 P.zeta_phi = 1.107;
 P.wn_phi = sqrt(abs(T.a_phi2)*P.delta_a_max/P.e_phi_max);
