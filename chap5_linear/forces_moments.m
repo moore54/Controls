@@ -102,11 +102,16 @@ function out = forces_moments(x, delta, wind, P)
    C_Z_delta_e_alpha = -P.C_D_delta_e*sin(alpha) - P.C_L_delta_e*cos(alpha);
    
     % compute external forces and torques on aircraft
-    Force(1) =  -P.mass*P.gravity*sin(theta)+0.5*P.rho*Va^2*P.S_wing*(C_X_alpha+C_X_q_alpha*P.c/(2*Va)*q+C_X_delta_e_alpha*delta_e)...
+    
+    grav_force_x = P.mass*P.gravity*(cos(theta)*cos(psi));
+    grav_force_y = P.mass*P.gravity*(sin(phi)*sin(theta)*cos(psi)-cos(phi)*sin(psi));
+    grav_force_z = P.mass*P.gravity*(cos(phi)*sin(theta)*cos(psi)+sin(phi)*sin(psi));
+    
+    Force(1) =  grav_force_x+0.5*P.rho*Va^2*P.S_wing*(C_X_alpha+C_X_q_alpha*P.c/(2*Va)*q+C_X_delta_e_alpha*delta_e)...
         +0.5*P.rho*P.S_prop*P.C_prop*((P.k_motor*delta_t)^2-Va^2);
-    Force(2) =  P.mass*P.gravity*cos(theta)*sin(phi)+0.5*P.rho*Va^2*P.S_wing*(P.C_Y_0+P.C_Y_beta*beta+P.C_Y_p*P.b/(2*Va)*p+...
+    Force(2) = grav_force_y+0.5*P.rho*Va^2*P.S_wing*(P.C_Y_0+P.C_Y_beta*beta+P.C_Y_p*P.b/(2*Va)*p+...
         P.C_Y_r*P.b/(2*Va)*r+P.C_Y_delta_a*delta_a+P.C_Y_delta_r*delta_r);
-    Force(3) =  P.mass*P.gravity*cos(theta)*cos(phi)+0.5*P.rho*Va^2*P.S_wing*(C_Z_alpha+C_Z_q_alpha*P.c/(2*Va)*q+C_Z_delta_e_alpha*delta_e);
+    Force(3) = grav_force_z+0.5*P.rho*Va^2*P.S_wing*(C_Z_alpha+C_Z_q_alpha*P.c/(2*Va)*q+C_Z_delta_e_alpha*delta_e);
 
     Torque(1) = 0.5*P.rho*Va^2*P.S_wing*P.b*(P.C_ell_0 + P.C_ell_beta*beta + (P.C_ell_p*P.b*p/(2*Va)) + (P.C_ell_r*P.b*r/(2*Va)) + P.C_ell_delta_a*delta_a + P.C_ell_delta_r*delta_r)...
         - P.k_T_P*(P.k_Omega*delta_t)^2;

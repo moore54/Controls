@@ -129,20 +129,20 @@ P.r0     = 0;  % initial body frame yaw rate
 P.u_trim = u_trim;
 P.x_trim = x_trim;
 
-% set initial conditions to trim conditions
-% initial conditions
-P.pn0    = 0;  % initial North position
-P.pe0    = 0;  % initial East position
-P.pd0    = 0;  % initial Down position (negative altitude)
-P.u0     = x_trim(4);  % initial velocity along body x-axis
-P.v0     = x_trim(5);  % initial velocity along body y-axis
-P.w0     = x_trim(6);  % initial velocity along body z-axis
-P.phi0   = x_trim(7);  % initial roll angle
-P.theta0 = x_trim(8);  % initial pitch angle
-P.psi0   = x_trim(9);  % initial yaw angle
-P.p0     = x_trim(10);  % initial body frame roll rate
-P.q0     = x_trim(11);  % initial body frame pitch rate
-P.r0     = x_trim(12);  % initial body frame yaw rate
+% % set initial conditions to trim conditions
+% % initial conditions
+% P.pn0    = 0;  % initial North position
+% P.pe0    = 0;  % initial East position
+% P.pd0    = 0;  % initial Down position (negative altitude)
+% P.u0     = x_trim(4);  % initial velocity along body x-axis
+% P.v0     = x_trim(5);  % initial velocity along body y-axis
+% P.w0     = x_trim(6);  % initial velocity along body z-axis
+% P.phi0   = x_trim(7);  % initial roll angle
+% P.theta0 = x_trim(8);  % initial pitch angle
+% P.psi0   = x_trim(9);  % initial yaw angle
+% P.p0     = x_trim(10);  % initial body frame roll rate
+% P.q0     = x_trim(11);  % initial body frame pitch rate
+% P.r0     = x_trim(12);  % initial body frame yaw rate
 
 % compute different transfer functions
 [T_phi_delta_a,T_chi_phi,T_theta_delta_e,T_h_theta,T_h_Va,T_Va_delta_t,T_Va_theta,T_v_delta_r]...
