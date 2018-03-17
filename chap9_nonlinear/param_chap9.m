@@ -150,7 +150,7 @@ P.r0     = x_trim(12);  % initial body frame yaw rate
 
 % linearize the equations of motion around trim conditions
 [A_lon, B_lon, A_lat, B_lat] = compute_ss_model('mavsim_trim',x_trim,u_trim);
-
+out = eig(A_lon)
 
 P.tau = 0.05;
 
