@@ -1,12 +1,18 @@
-using LabelledArrays
+using LabelledArrays, StaticArrays
 
 
-names1 = @SArray [:gravity,:mass,:Jx,:Jy,:Jz,:Jxz,:S_wing,:b,:c,:S_prop,:rho,:k_motor,:k_T_P,:k_Omega,:e,:C_L_0,:C_L_alpha,:C_L_q,:C_L_delta_e,:C_D_0,:C_D_alpha,:C_D_p,:C_D_q,:C_D_delta_e,:C_m_0,:C_m_alpha,:C_m_q,:C_m_delta_e,:C_Y_0,:C_Y_beta,:C_Y_p,:C_Y_r,:C_Y_delta_a,:C_Y_delta_r,:C_ell_0,:C_ell_beta,:C_ell_p,:C_ell_r,:C_ell_delta_a,:C_ell_delta_r,:C_n_0,:C_n_beta,:C_n_p,:C_n_r,:C_n_delta_a,:C_n_delta_r,:C_prop,:M,:epsilon,:alpha0,:gamma,:gamma1,:gamma2,:gamma3,:gamma4,:gamma5,:gamma6,:gamma7,:gamma8,:C_p_0,:C_p_beta,:C_p_p,:C_p_r,:C_p_delta_a,:C_p_delta_r,:C_r_0,:C_r_beta,:C_r_p,:C_r_r,:C_r_delta_a,:C_r_delta_r,:AR,:wind_n,:wind_e,:wind_d,:L_u,:L_v,:L_w,:sigma_u,:sigma_v,:sigma_w,:Va0,:lambda,:Ts,:pn0,:pe0,:pd0,:u0,:v0,:w0,:phi0,:theta0,:psi0,:p0,:q0,:r0]
-values = @MArray [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+names1 = @SArray [:delta_e,:delta_a,:delta_r,:delta_t,:gravity,:mass,:Jx,:Jy,:Jz,:Jxz,:S_wing,:b,:c,:S_prop,:rho,:k_motor,:k_T_P,:k_Omega,:e,:C_L_0,:C_L_alpha,:C_L_q,:C_L_delta_e,:C_D_0,:C_D_alpha,:C_D_p,:C_D_q,:C_D_delta_e,:C_m_0,:C_m_alpha,:C_m_q,:C_m_delta_e,:C_Y_0,:C_Y_beta,:C_Y_p,:C_Y_r,:C_Y_delta_a,:C_Y_delta_r,:C_ell_0,:C_ell_beta,:C_ell_p,:C_ell_r,:C_ell_delta_a,:C_ell_delta_r,:C_n_0,:C_n_beta,:C_n_p,:C_n_r,:C_n_delta_a,:C_n_delta_r,:C_prop,:M,:epsilon,:alpha0,:gamma0,:gamma1,:gamma2,:gamma3,:gamma4,:gamma5,:gamma6,:gamma7,:gamma8,:C_p_0,:C_p_beta,:C_p_p,:C_p_r,:C_p_delta_a,:C_p_delta_r,:C_r_0,:C_r_beta,:C_r_p,:C_r_r,:C_r_delta_a,:C_r_delta_r,:AR,:wind_n,:wind_e,:wind_d,:L_u,:L_v,:L_w,:sigma_u,:sigma_v,:sigma_w,:Va0,:lambda,:Ts,:pn0,:pe0,:pd0,:u0,:v0,:w0,:phi0,:theta0,:psi0,:p0,:q0,:r0]
+values_1 = @MArray [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
-P = LMArray(names1,values)
+P = LMArray(names1,values_1)
 
-test = P[:gravity]
+# Control inputs
+P[:delta_e] = 0.0
+P[:delta_a] = 0.0
+P[:delta_r] = 0.0
+P[:delta_t] = 0.5
+
+
 P[:gravity] = 9.8;
 
 #################################
@@ -66,15 +72,15 @@ P[:alpha0]        = 0.4712;
 
 ##################################
 
-P[:gamma] = P[:Jx]*P[:Jz] - (P[:Jxz])^2;
-P[:gamma1] = (P[:Jxz]*(P[:Jx]-P[:Jy]+P[:Jz]))/P[:gamma];
-P[:gamma2] = (P[:Jz]*(P[:Jz]-P[:Jy])+P[:Jxz]^2)/P[:gamma];
-P[:gamma3] = P[:Jz]/P[:gamma];
-P[:gamma4] = P[:Jxz]/P[:gamma];
+P[:gamma0] = P[:Jx]*P[:Jz] - (P[:Jxz])^2;
+P[:gamma1] = (P[:Jxz]*(P[:Jx]-P[:Jy]+P[:Jz]))/P[:gamma0];
+P[:gamma2] = (P[:Jz]*(P[:Jz]-P[:Jy])+P[:Jxz]^2)/P[:gamma0];
+P[:gamma3] = P[:Jz]/P[:gamma0];
+P[:gamma4] = P[:Jxz]/P[:gamma0];
 P[:gamma5] = (P[:Jz]-P[:Jx])/P[:Jy];
 P[:gamma6] = P[:Jxz]/P[:Jy];
-P[:gamma7] = ((P[:Jx]-P[:Jy])*P[:Jx] + P[:Jxz]^2)/P[:gamma];
-P[:gamma8] = P[:Jx]/P[:gamma];
+P[:gamma7] = ((P[:Jx]-P[:Jy])*P[:Jx] + P[:Jxz]^2)/P[:gamma0];
+P[:gamma8] = P[:Jx]/P[:gamma0];
 
 ########
 
@@ -111,7 +117,7 @@ P[:sigma_w] = .7;
 # compute trim conditions using 'mavsim_chap5_trim.slx'
 # initial airspeed
 P[:Va0] = 17;
-gamma = 0*pi/180;  # desired flight path angle (radians)
+gamma_angle = 0*pi/180;  # desired flight path angle (radians)
 R     = Inf;         # desired radius (m) - use (+) for right handed orbit,
 P[:lambda] = 100;
 # autopilot sample rate
