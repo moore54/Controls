@@ -21,7 +21,7 @@ end
 end
 
 
-@inline @inbounds function testUAV!(dinputs,inputs,par,times)
+@inline @inbounds function testUAV!(dinputs,inputs,par,time)
 
     pn    = inputs[1];
     pe    = inputs[2];
@@ -91,6 +91,8 @@ end
     alpha = atan2(wr,ur);#-par[:alpha0];
     beta = asin(vr/Va);
 
+    println("$Va, $alpha, $beta")
+
     if (Va == 0)
         Va = par[:Va0];
     end
@@ -115,6 +117,7 @@ end
    C_Z_delta_e_alpha = -par[:C_D_delta_e]*sin(alpha) - par[:C_L_delta_e]*cos(alpha);
 
     # compute external forces and torques on aircraft
+    println((0.5*par[:rho]*par[:S_prop]*par[:C_prop]*((par[:k_motor]*delta_t)^2-Va^2)))
     Force1 =  -par[:mass]*par[:gravity]*sin(theta)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_X_alpha+C_X_q_alpha*par[:c]/(2*Va)*q+C_X_delta_e_alpha*delta_e)+0.5*par[:rho]*par[:S_prop]*par[:C_prop]*((par[:k_motor]*delta_t)^2-Va^2);
     Force2 =  par[:mass]*par[:gravity]*cos(theta)*sin(phi)+0.5*par[:rho]*Va^2*par[:S_wing]*(par[:C_Y_0]+par[:C_Y_beta]*beta+par[:C_Y_p]*par[:b]/(2*Va)*p+par[:C_Y_r]*par[:b]/(2*Va)*r+par[:C_Y_delta_a]*delta_a+par[:C_Y_delta_r]*delta_r);
     Force3 =  par[:mass]*par[:gravity]*cos(theta)*cos(phi)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_Z_alpha+C_Z_q_alpha*par[:c]/(2*Va)*q+C_Z_delta_e_alpha*delta_e);
@@ -171,18 +174,19 @@ end
     dinputs[12] = rdot
 
     println(dinputs)
+    println("time: $time")
 
 end
 
-# dinputs = zeros(12)
-# inputs = zeros(12)
-# par = P
-# times = 1
-# @time testUAV!(dinputs,inputs,par,times)
+dinputs = zeros(12)
+x0  = [P[:pn0],P[:pe0],P[:pd0],P[:u0],P[:v0],P[:w0],P[:phi0],P[:theta0],P[:psi0],P[:p0],P[:q0],P[:r0]]
+par = P
+times = 0
+@time testUAV!(dinputs,x0,par,times)
 
 # ds = ContinuousDynamicalSystem(loop, rand(3), [10.0, 28.0, 8/3], loop_jac)
-x0  = [P[:pn0],P[:pe0],P[:pd0],P[:u0],P[:v0],P[:w0],P[:phi0],P[:theta0],P[:psi0],P[:p0],P[:q0],P[:r0]]
-ds = ContinuousDynamicalSystem(testUAV!, x0, P)
+# x0  = [P[:pn0],P[:pe0],P[:pd0],P[:u0],P[:v0],P[:w0],P[:phi0],P[:theta0],P[:psi0],P[:p0],P[:q0],P[:r0]]
+# ds = ContinuousDynamicalSystem(testUAV!, x0, P)
 # data = trajectory(ds, 10) #this returns a dataset
 #
 # PyPlot.plot3D(data[:,1],data[:,2],data[:,3])
@@ -190,11 +194,11 @@ ds = ContinuousDynamicalSystem(testUAV!, x0, P)
 # PyPlot.figure()
 # PyPlot.plot(data[:,1],data[:,2])
 
-integ_1 = integrator(ds, x0)
-# for i=1:100
-i = 1
-
-test2 = step!(integ_1,0.1,true)
-PyPlot.plot(integ_1.inputs[1],integ_1.inputs[2],"r.")
-PyPlot.pause(0.1)
-# end
+# integ_1 = integrator(ds, x0)
+# # for i=1:100
+# i = 1
+#
+# test2 = step!(integ_1,0.1,true)
+# PyPlot.plot(integ_1.inputs[1],integ_1.inputs[2],"r.")
+# PyPlot.pause(0.1)
+# # end

@@ -13,6 +13,7 @@ switch flag,
   %%%%%%%%%%%%%%%
   case 1,
     sys=mdlDerivatives(t,x,u,P);
+    
 
   %%%%%%%%%%
   % Update %
