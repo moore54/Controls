@@ -102,7 +102,7 @@ function out = forces_moments(x, delta, wind, P)
    C_Z_delta_e_alpha = -P.C_D_delta_e*sin(alpha) - P.C_L_delta_e*cos(alpha);
    
     % compute external forces and torques on aircraft
-    output = (0.5*P.rho*P.S_prop*P.C_prop*((P.k_motor*delta_t)^2-Va^2))
+    
     Force(1) =  -P.mass*P.gravity*sin(theta)+0.5*P.rho*Va^2*P.S_wing*(C_X_alpha+C_X_q_alpha*P.c/(2*Va)*q+C_X_delta_e_alpha*delta_e)...
         +0.5*P.rho*P.S_prop*P.C_prop*((P.k_motor*delta_t)^2-Va^2);
     Force(2) =  P.mass*P.gravity*cos(theta)*sin(phi)+0.5*P.rho*Va^2*P.S_wing*(P.C_Y_0+P.C_Y_beta*beta+P.C_Y_p*P.b/(2*Va)*p+...

@@ -10,7 +10,7 @@ P = LMArray(names1,values_1)
 P[:delta_e] = 0.0
 P[:delta_a] = 0.0
 P[:delta_r] = 0.0
-P[:delta_t] = 0.5
+P[:delta_t] = 1.0
 
 
 P[:gravity] = 9.8;
