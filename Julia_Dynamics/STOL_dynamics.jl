@@ -144,4 +144,11 @@ println("Compile & Run step!()")
 println("Run step!()")
 @time step!(integ_1,0.5, true)
 
-PyPlot.scatter3D(integ_1.u[1],integ_1.u[2],integ_1.u[3],"r.")
+for i = 1:10
+    integ_1.p[:delta_e] = 0.0*pi/180
+    integ_1.p[:delta_a] = 0.0*pi/180
+    integ_1.p[:delta_r] = 0.0*pi/180
+    integ_1.p[:delta_t] = 0.25
+    step!(integ_1,0.5, true)
+    PyPlot.scatter3D(integ_1.u[1],integ_1.u[2],integ_1.u[3],"r.")
+end
