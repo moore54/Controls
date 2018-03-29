@@ -11,7 +11,7 @@ P[:theta] = 0.0*pi/180
 P[:delta_e] = 0.0
 P[:delta_a] = 0.0
 P[:delta_r] = 0.0
-P[:delta_t] = 0.5
+P[:delta_t] = 0.2
 
 
 P[:gravity] = 9.8;

@@ -15,6 +15,7 @@ function testUAV!(dinputs,inputs,par,time)
     delta_t = par[:delta_t]
 
     Va = sqrt(u^2+w^2);
+    # println(Va)
     alpha = atan2(w,u);#-par[:alpha0];
 
     if (Va == 0)
@@ -35,7 +36,8 @@ function testUAV!(dinputs,inputs,par,time)
    C_Z_alpha = -C_D_alpha*sin(alpha) - C_L_alpha*cos(alpha);
 
     # compute external forces and torques on aircraft
-    fx =  -par[:mass]*par[:gravity]*sin(theta)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_X_alpha)+0.5*par[:rho]*par[:S_prop]*par[:C_prop]*((par[:k_motor]*delta_t)^2-Va^2);
+    prop_thrust = 0.5*par[:rho]*par[:S_prop]*par[:C_prop]*((par[:k_motor]*delta_t)^2-Va^2)
+    fx =  -par[:mass]*par[:gravity]*sin(theta)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_X_alpha)+prop_thrust;
     fz =  par[:mass]*par[:gravity]*cos(theta)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_Z_alpha);
 
     #-------- DYNAMICS --------#
