@@ -654,7 +654,7 @@ end
 function [delta, x_command] = autopilot_kevin(Va_c,h_c,chi_c,Va,h,chi,phi,theta,p,q,r,t,P,TOL_Error)
 
 myflag = 0;
-if t==0
+if t<1E-4
     myflag = 1;
 end
 

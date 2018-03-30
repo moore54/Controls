@@ -101,7 +101,7 @@ P.sigma_w = .7;
 
 % compute trim conditions using 'mavsim_chap5_trim.slx'
 % initial airspeed
-P.Va0 = 30;
+P.Va0 = 35;
 gamma = 0*pi/180;  % desired flight path angle (radians)
 R     = Inf;         % desired radius (m) - use (+) for right handed orbit,
 P.lambda = 100;
@@ -131,8 +131,8 @@ P.x_trim = x_trim;
 
 % set initial conditions to trim conditions
 % initial conditions
-P.pn0    = -50;  % initial North position
-P.pe0    = -50;  % initial East position
+P.pn0    = -10;  % initial North position
+P.pe0    = -10;  % initial East position
 P.pd0    = -100;  % initial Down position (negative altitude)
 P.u0     = x_trim(4);  % initial velocity along body x-axis
 P.v0     = x_trim(5);  % initial velocity along body y-axis
