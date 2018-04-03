@@ -111,7 +111,7 @@ P.Ts = 0.01;
 % first cut at initial conditions
 P.pn0    = 0;  % initial North position
 P.pe0    = 0;  % initial East position
-P.pd0    = 0;  % initial Down position (negative altitude)
+P.pd0    = -100;  % initial Down position (negative altitude)
 P.u0     = P.Va0; % initial velocity along body x-axis
 P.v0     = 0;  % initial velocity along body y-axis
 P.w0     = 0;  % initial velocity along body z-axis
@@ -156,7 +156,7 @@ P.tau = 0.05;
 
 %%%% ROLL (phi) %%%%
 
-P.delta_a_max = 30*pi/180;
+P.delta_a_max = 50*pi/180;
 P.e_phi_max = 20*pi/180;
 P.zeta_phi = 1.107;
 P.wn_phi = sqrt(abs(T.a_phi2)*P.delta_a_max/P.e_phi_max);
@@ -295,9 +295,9 @@ P.chi_inf = 89.0*pi/180;
  
 % chapter 11 - path manager
 % number of waypoints in data structure
-P.size_waypoint_array = 100;
-P.phi_max = 50.0*pi/180;
-P.R_min = P.Va0^2/P.gravity/tan(P.phi_max)/2;
+P.size_waypoint_array = 500;
+P.phi_max = 60.0*pi/180;
+P.R_min = P.Va0^2/P.gravity/tan(P.phi_max)*.5;
 
 % create random city map
 city_width      = 2000;  % the city is of size (width)x(width)

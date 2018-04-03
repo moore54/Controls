@@ -39,7 +39,7 @@ function out = path_planner(in,P,map)
     % of the waypoint is (pn, pe, pd), the desired course at the waypoint
     % is chi, and the desired airspeed between waypoints is Va
     % if chi!=-9999, then Dubins paths will be used between waypoints.
-    switch 3,
+    switch 2,
           case 1,
             num_waypoints = 4;
             wpp = [...
@@ -94,10 +94,10 @@ function out = path_planner(in,P,map)
               end
           case 5,  % cover path through city using Dubin's paths
                % current configuration
-              wpp_start = [pn, pe, -h, chi, P.Va0];
-%               waypoints = planCoverRRTDubins(wpp_start, P.R_min, map);
-              waypoints = planCover(wpp_start, map);
-              num_waypoints = size(waypoints,1);
+              wpp_start = [pn, pe, -100, chi, P.Va0];
+              waypoints = planCoverRRTDubins(wpp_start, map,P.R_min);
+%               waypoints = planCover(wpp_start, map);
+              num_waypoints = size(waypoints,1)-1;
               wpp = [];
               for i=1:num_waypoints,
                   wpp = [...
