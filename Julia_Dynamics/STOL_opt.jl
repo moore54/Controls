@@ -1,18 +1,20 @@
 fileLoc,_ = splitdir(@__FILE__)
 
 using Snopt
+using Dierckx
+using Roots
 using PyPlot
 PyPlot.close("all")
 
 include("$fileLoc/STOL_dynamics_delta_e.jl")
 
 function objcon(x)
-    args = (ds,h_set,dt,TW,optimize,P)
+    args = (ds,h_set,dt,PW,optimize,P)
     # println("1")
     return obj(x,args...)
 end
 
-function obj(delta_e,ds,h_set,dt,TW,optimize,P)
+function obj(delta_e,ds,h_set,dt,PW,optimize,P)
 
     #Reinitizilze the integrator
     integ_1 = integrator(ds)
@@ -22,19 +24,28 @@ function obj(delta_e,ds,h_set,dt,TW,optimize,P)
     Va = zeros(delta_e)
     C_minheight = zeros(delta_e)
     C_vel = zeros(delta_e)
+    CL = zeros(delta_e)
     for i = 1:length(delta_e)
 
         integ_1.p[:delta_e] = delta_e[i]*pi/180
-        integ_1.p[:delta_t] = 0.5#thrust
-        integ_1.p[:thrust_weight] = TW
+        integ_1.p[:delta_t] = 0.5 #thrust
+        try
+            integ_1.p[:thrust_weight] = PW/Va[i-1]
+        catch
+            integ_1.p[:thrust_weight] = PW/integ_1.p[:Va0]
+        end
 
         step!(integ_1,dt, true)
         Va[i] = sqrt(integ_1.u[3]^2+integ_1.u[4]^2)
-        thrust = P[:thrust_weight]*P[:gravity]*P[:mass]
+        thrust = integ_1.p[:thrust_weight]*P[:gravity]*P[:mass]
         # prop_thrust = 0.5*P[:rho]*P[:S_prop]*P[:C_prop]*((P[:k_motor]*thrust)^2-Va[i]^2)
         errorsum += (h_set-(-integ_1.u[2]))
         savestates[i,1:6] = integ_1.u
         savestates[i,7] = thrust
+
+        alpha = atan2(integ_1.u[3],integ_1.u[4])
+        sigma_alpha = (1 + exp(-P[:M]*(alpha-P[:alpha0])) + exp(P[:M]*(alpha+P[:alpha0])))/((1+exp(-P[:M]*(alpha-P[:alpha0])))*(1+exp(P[:M]*(alpha+P[:alpha0]))));
+        CL[i] = (1-sigma_alpha)*(P[:C_L_0] + P[:C_L_alpha]*alpha) + sigma_alpha*(2*sign(alpha)*(sin(alpha)^2)*cos(alpha));
 
         c_vel = integ_1.p[:Va0]-Va[i]
 
@@ -54,7 +65,7 @@ function obj(delta_e,ds,h_set,dt,TW,optimize,P)
     if optimize
         return J,C,false
     else
-        return errorsum,savestates,C_vel,C_minheight
+        return errorsum,savestates,C_vel,C_minheight,CL
     end
 end
 
@@ -69,7 +80,7 @@ ds = ContinuousDynamicalSystem(testUAV!, x0, P)
 # step!(integ_1,dt, true)
 # println(integ_1.u)
 
-delta_e = [-80.0, -23.6311, -15.4772, 0.0, 0.0, -9.52617, -37.6217, -17.1981, -20.3374, -31.1988, -13.0533, -25.3677, -28.7171, -10.6457, -34.9761, -11.4172, -38.6286, 0.0, -80.0, -80.0]
+delta_e = [-64.1588, -85.0, 84.6705, -67.8829, 40.7014, -15.1621, -43.0495, 2.08015, -42.6057, 4.12959, -55.8678, 85.0, -26.2024, -9.43524, -75.5494, 32.4107, -19.205, 17.8462, -85.0, -81.844]
 h_set = 10.0
 dt = .10
 time_sim = collect(dt:dt:dt*length(delta_e))
@@ -95,18 +106,31 @@ options["Print frequency"] = 100
 options["Scale option"] = 1
 options["Scale tolerance"] = .95
 
-TW_array = [.3,.5,.7,.8,.9,.999]#linspace(.459,.46,10)
-TW = []
+# PW_array = [.3,.5,.7,.8,.9,.999]#linspace(.459,.46,10)
+PW_array = linspace(10,20,5)
+PW = []
 optimize = []
-errorsum = zeros(TW_array)
-mean_thrust2weight = zeros(TW_array)
-total_energy = zeros(TW_array)
-for i = 1:length(TW_array)
+errorsum = zeros(PW_array)
+mean_thrust2weight = zeros(PW_array)
+total_energy = zeros(PW_array)
+final_dist = zeros(PW_array)
+
+function zero_height(x)
+    return  zero_height(x,args...)
+end
+
+function zero_height(x,alt_spl,h_set)
+    h = alt_spl(x)
+    return h-h_set
+end
+
+for i = 1:length(PW_array)
+    # i = 1
 
     optimize = true
-    TW = TW_array[i]
+    PW = PW_array[i]
     # println("5")
-    xopt, fopt, optinfo = snopt(objcon, x0, lb, ub, options;printfile = "$(fileLoc)/snopt-print$TW.out", sumfile = "$(fileLoc)/snopt-summary.out") #!!!!!! ARGS are in objcon wrapper function !!!!!!!!#
+    xopt, fopt, optinfo = snopt(objcon, x0, lb, ub, options;printfile = "$(fileLoc)/snopt-print$PW.out", sumfile = "$(fileLoc)/snopt-summary.out") #!!!!!! ARGS are in objcon wrapper function !!!!!!!!#
 
     println("xopt: $(xopt)")
     println("####################################################")
@@ -116,68 +140,88 @@ for i = 1:length(TW_array)
     optimize = false
 
     delta_e = xopt
-    errorsum[i],savestates,C_vel,C_minheight = objcon(delta_e)
+    errorsum[i],savestates,C_vel,C_minheight,CL = objcon(delta_e)
     mean_thrust2weight[i] = mean(savestates[:,end]./(ones(time_sim)*P[:mass]*P[:gravity]))
     Va = sqrt.(savestates[:,3].^2+savestates[:,4].^2)
 
+    figname = "d_CL"
+    PyPlot.figure(figname)
+    PyPlot.plot(savestates[:,1],CL,".-",label = "$(round.(PW,4))")
+    PyPlot.xlabel("pn (m)")
+    PyPlot.ylabel("CL")
+    legend(loc="center left", title = "Power/Weight",bbox_to_anchor=(1, 0.5))
+    PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
+
     figname = "d_Va"
     PyPlot.figure(figname)
-    PyPlot.plot(savestates[:,1],Va,".-",label = "T/weight $(round.(mean_thrust2weight[i],4))")
-    PyPlot.xlabel("x-loc (m)")
+    PyPlot.plot(savestates[:,1],Va,".-",label = "$(round.(PW,4))")
+    PyPlot.xlabel("pn (m)")
     PyPlot.ylabel("Va (m/s)")
-    PyPlot.legend(loc = "best")
-    PyPlot.savefig("./figures/$figname.png",transparent = true)
+    legend(loc="center left", title = "Power/Weight",bbox_to_anchor=(1, 0.5))
+    PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
     # PyPlot.ylim(0,32)
 
     figname = "pn_pd"
     PyPlot.figure(figname)
-    PyPlot.plot(savestates[:,1],-savestates[:,2],".-",label = "T/weight $(round.(mean_thrust2weight[i],4))")
+    PyPlot.plot(savestates[:,1],-savestates[:,2],".-",label = "$(round.(PW,4))")
     PyPlot.xlabel("pn (m)")
-    PyPlot.ylabel("pd (m)")
-    PyPlot.legend(loc = "best")
-    PyPlot.savefig("./figures/$figname.png",transparent = true)
+    PyPlot.ylabel("-pd (m)")
+    legend(loc="center left", title = "Power/Weight",bbox_to_anchor=(1, 0.5))
+    PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
     # PyPlot.xlim(0,70)
     # PyPlot.ylim(0,20)
 
     figname = "t_T"
     PyPlot.figure(figname)
-    PyPlot.plot(time_sim,savestates[:,end]./(ones(time_sim)*P[:mass]*P[:gravity]),".-",label = "Thrust/Weight $(round.(TW,3))")
+    PyPlot.plot(time_sim,savestates[:,end]./(ones(time_sim)*P[:mass]*P[:gravity]),".-",label = "$(round.(PW,3))")
     # PyPlot.plot(time_sim,ones(time_sim)*P[:mass]*P[:gravity],"k-")
     PyPlot.xlabel("time (s)")
     PyPlot.ylabel("Thrust/Weight")
-    PyPlot.legend(loc = "best")
-    PyPlot.savefig("./figures/$figname.png",transparent = true)
+    legend(loc="center left", title = "Power/Weight",bbox_to_anchor=(1, 0.5))
+    PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
 
     power = Va.*savestates[:,end]
 
     figname = "power"
     PyPlot.figure(figname)
-    PyPlot.plot(time_sim,power,".-",label = "T/weight $(round.(mean_thrust2weight[i],4))")
+    PyPlot.plot(time_sim,power,".-",label = "$(round.(PW,4))")
     # PyPlot.plot(time_sim,ones(time_sim)*P[:mass]*P[:gravity],"k-")
     PyPlot.xlabel("time (s)")
     PyPlot.ylabel("Power")
-    PyPlot.legend(loc = "best")
-    PyPlot.savefig("./figures/$figname.png",transparent = true)
+    legend(loc="center left", title = "Power/Weight",bbox_to_anchor=(1, 0.5))
+    PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
 
-    total_energy[i] = sum(power.*dt)
+    alt_spl = Dierckx.Spline1D(savestates[:,1],-savestates[:,2])
+    va_spl = Dierckx.Spline1D(savestates[:,1],Va)
+    T_spl = Dierckx.Spline1D(savestates[:,1],savestates[:,end])
+    t_spl = Dierckx.Spline1D(savestates[:,1],time_sim)
+    P_spl = Dierckx.Spline1D(time_sim,power)
+
+    args = (alt_spl,h_set)
+    dist_at_height = fzero(zero_height,0,maximum(savestates[:,1]))
+    time_at_height = t_spl(dist_at_height)
+    total_energy[i] = integrate(P_spl,0,time_at_height)
+    final_dist[i] = dist_at_height
 
 end
 
 figname = "errorsum"
 PyPlot.figure(figname)
-PyPlot.plot(mean_thrust2weight,errorsum,".-",label = "Thrust/Weight $(round.(TW,3))")
-# PyPlot.plot(time_sim,ones(time_sim)*P[:mass]*P[:gravity],"k-")
-PyPlot.xlabel("Thrust/Weight")
+PyPlot.plot(PW_array,errorsum,".-",label = "$(round.(PW_array,3))")
+PyPlot.xlabel("Power/Weight")
 PyPlot.ylabel("errorsum")
-PyPlot.legend(loc = "best")
-PyPlot.savefig("./figures/$figname.png",transparent = true)
-
+PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
 
 figname = "total_energy"
 PyPlot.figure(figname)
-PyPlot.plot(mean_thrust2weight,total_energy,".-",label = "Thrust/Weight $(round.(TW,3))")
-# PyPlot.plot(time_sim,ones(time_sim)*P[:mass]*P[:gravity],"k-")
-PyPlot.xlabel("Thrust/Weight")
-PyPlot.ylabel("total_energy (J)")
-PyPlot.legend(loc = "best")
-PyPlot.savefig("./figures/$figname.png",transparent = true)
+PyPlot.plot(PW_array,total_energy/(P[:mass]*P[:gravity]),".-",label = "$(round.(PW_array,3))")
+PyPlot.xlabel("Power/Weight")
+PyPlot.ylabel("Energy/Weight (J/N)")
+PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
+
+figname = "average_slope"
+PyPlot.figure(figname)
+PyPlot.plot(PW_array,h_set./final_dist,".-",label = "$(round.(PW_array,3))")
+PyPlot.xlabel("Power/Weight")
+PyPlot.ylabel("Average Slope (H/D)")
+PyPlot.savefig("./figures/dynamic_opt/$figname.png",transparent = true)
