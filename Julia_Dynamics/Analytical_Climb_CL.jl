@@ -28,7 +28,7 @@ CL0 = 0.0
 rho = 1.18
 Sref = .55
 AR = 15
-e = 1.0
+e_wing = 1.0
 
 N_PW = 60
 # N_CL = 10
@@ -83,7 +83,7 @@ for j = 1:N_CL
          end
 
 
-         CD = (CL)^2 / (pi*e*AR) + CDp
+         CD = (CL)^2 / (pi*e_wing*AR) + CDp
          drag = CD*0.5*rho*Va^2*Sref
 
          dist = height*sqrt((mass*gravity/(thrust-drag))^2.0-1.0)
