@@ -1,8 +1,8 @@
 using LabelledArrays, StaticArrays
 
 
-names1 = @SArray [:power_weight,:ground_threshold,:theta,:delta_e,:delta_a,:delta_r,:delta_t,:gravity,:mass,:Jx,:Jy,:Jz,:Jxz,:S_wing,:b,:c,:S_prop,:rho,:k_motor,:k_T_P,:k_Omega,:e,:C_L_0,:C_L_alpha,:C_L_q,:C_L_delta_e,:C_D_0,:C_D_alpha,:C_D_p,:C_D_q,:C_D_delta_e,:C_m_0,:C_m_alpha,:C_m_q,:C_m_delta_e,:C_Y_0,:C_Y_beta,:C_Y_p,:C_Y_r,:C_Y_delta_a,:C_Y_delta_r,:C_ell_0,:C_ell_beta,:C_ell_p,:C_ell_r,:C_ell_delta_a,:C_ell_delta_r,:C_n_0,:C_n_beta,:C_n_p,:C_n_r,:C_n_delta_a,:C_n_delta_r,:C_prop,:M,:epsilon,:alpha0,:gamma0,:gamma1,:gamma2,:gamma3,:gamma4,:gamma5,:gamma6,:gamma7,:gamma8,:C_p_0,:C_p_beta,:C_p_p,:C_p_r,:C_p_delta_a,:C_p_delta_r,:C_r_0,:C_r_beta,:C_r_p,:C_r_r,:C_r_delta_a,:C_r_delta_r,:AR,:wind_n,:wind_e,:wind_d,:L_u,:L_v,:L_w,:sigma_u,:sigma_v,:sigma_w,:Va0,:lambda,:Ts,:pn0,:pe0,:pd0,:u0,:v0,:w0,:phi0,:theta0,:psi0,:p0,:q0,:r0]
-values_1 = @MArray [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
+names1 = @SArray [:thrust_weight,:power_weight,:ground_threshold,:theta,:delta_e,:delta_a,:delta_r,:delta_t,:gravity,:mass,:Jx,:Jy,:Jz,:Jxz,:S_wing,:b,:c,:S_prop,:rho,:k_motor,:k_T_P,:k_Omega,:e,:C_L_0,:C_L_alpha,:C_L_q,:C_L_delta_e,:C_D_0,:C_D_alpha,:C_D_p,:C_D_q,:C_D_delta_e,:C_m_0,:C_m_alpha,:C_m_q,:C_m_delta_e,:C_Y_0,:C_Y_beta,:C_Y_p,:C_Y_r,:C_Y_delta_a,:C_Y_delta_r,:C_ell_0,:C_ell_beta,:C_ell_p,:C_ell_r,:C_ell_delta_a,:C_ell_delta_r,:C_n_0,:C_n_beta,:C_n_p,:C_n_r,:C_n_delta_a,:C_n_delta_r,:C_prop,:M,:epsilon,:alpha0,:gamma0,:gamma1,:gamma2,:gamma3,:gamma4,:gamma5,:gamma6,:gamma7,:gamma8,:C_p_0,:C_p_beta,:C_p_p,:C_p_r,:C_p_delta_a,:C_p_delta_r,:C_r_0,:C_r_beta,:C_r_p,:C_r_r,:C_r_delta_a,:C_r_delta_r,:AR,:wind_n,:wind_e,:wind_d,:L_u,:L_v,:L_w,:sigma_u,:sigma_v,:sigma_w,:Va0,:lambda,:Ts,:pn0,:pe0,:pd0,:u0,:v0,:w0,:phi0,:theta0,:psi0,:p0,:q0,:r0]
+values_1 = @MArray [0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0,0.0]
 
 P = LMArray(names1,values_1)
 
@@ -13,8 +13,9 @@ P[:delta_a] = 0.0
 P[:delta_r] = 0.0
 P[:delta_t] = 0.2
 
-P[:ground_threshold] = 0.1
+P[:ground_threshold] = 2000.0
 P[:power_weight] = 10.0
+P[:thrust_weight] = 0.5
 
 P[:gravity] = 9.8
 
@@ -130,7 +131,7 @@ P[:Ts] = 0.01
 P[:pn0]    = 0.0  # initial North position
 P[:pe0]    = 0.0  # initial East position
 P[:pd0]    = 0.0  # initial Down position (negative altitude)
-P[:u0]     = 0.0  #P[:Va0] # initial velocity along body x-axis
+P[:u0]     = P[:Va0] # initial velocity along body x-axis
 P[:v0]     = 0.0  # initial velocity along body y-axis
 P[:w0]     = 0.0  # initial velocity along body z-axis
 P[:phi0]   = 0.0  # initial roll angle

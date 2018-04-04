@@ -3,6 +3,7 @@ using DynamicalSystems
 
 include("./STOL_params.jl")
 
+
 function testUAV!(dinputs,inputs,par,time)
 
 pn    = inputs[1];
@@ -57,15 +58,13 @@ C_Z_q_alpha = -par[:C_D_q]*sin(alpha) - par[:C_L_q]*cos(alpha);
 C_Z_delta_e_alpha = -par[:C_D_delta_e]*sin(alpha) - par[:C_L_delta_e]*cos(alpha);
 
 # compute external forces and torques on aircraft
-thrust = par[:power_weight]*par[:gravity]*par[:mass]/Va
+thrust = par[:thrust_weight]*par[:gravity]*par[:mass]
+# println(thrust)
+k = par[:ground_threshold]
+x0 = pi*e/k
+grav = par[:gravity]/(1+2.71828.^(-k.*(-pd-x0))) # set to zero if on ground smoothly
 
-if -pd>par[:ground_threshold]
-    grav = par[:gravity]
-else
-    grav= 0.0 #if on the ground nothing pulling airplane down
-end
-
-Force1 =  -par[:mass]*par[:gravity]*sin(theta)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_X_alpha+C_X_q_alpha*par[:c]/(2*Va)*q+C_X_delta_e_alpha*delta_e)+thrust#0.5*par[:rho]*par[:S_prop]*par[:C_prop]*((par[:k_motor]*delta_t)^2-Va^2);
+Force1 =  -par[:mass]*par[:gravity]*sin(theta)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_X_alpha+C_X_q_alpha*par[:c]/(2*Va)*q+C_X_delta_e_alpha*delta_e)+thrust #0.5*par[:rho]*par[:S_prop]*par[:C_prop]*((par[:k_motor]*delta_t)^2-Va^2);
 # Force2 =  par[:mass]*par[:gravity]*cos(theta)*sin(phi)+0.5*par[:rho]*Va^2*par[:S_wing]*(par[:C_Y_0]+par[:C_Y_beta]*beta+par[:C_Y_p]*par[:b]/(2*Va)*p+par[:C_Y_r]*par[:b]/(2*Va)*r+par[:C_Y_delta_a]*delta_a+par[:C_Y_delta_r]*delta_r);
 Force3 =  par[:mass]*grav*cos(theta)*cos(phi)+0.5*par[:rho]*Va^2*par[:S_wing]*(C_Z_alpha+C_Z_q_alpha*par[:c]/(2*Va)*q+C_Z_delta_e_alpha*delta_e);
 
