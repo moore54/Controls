@@ -355,13 +355,13 @@ for j = 1:N_CL
    #PyPlot.savefig("./figures/analytical/$figname.png",transparent = true)
    #
 
-   # figname = "TW_Vc_analytical"
-   # PyPlot.figure(figname)
-   # PyPlot.plot(TW_plot,height./time_plot,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Thrust / Weight")
-   # PyPlot.ylabel("Climb Rate (m/s)")
-   # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/analytical/$figname.png",transparent = true)
+   figname = "TW_Vc_analytical"
+   PyPlot.figure(figname)
+   PyPlot.plot(TW_plot,height./time_plot,".-",label = "$(round(CL_array[j],3))")
+   PyPlot.xlabel("Thrust / Weight")
+   PyPlot.ylabel("Climb Rate (m/s)")
+   legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
+   PyPlot.savefig("./figures/analytical/$figname.png",transparent = true)
 
 
    # figname = "Power_Vc_analytical"
