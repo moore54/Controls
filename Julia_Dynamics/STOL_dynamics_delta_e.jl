@@ -72,7 +72,8 @@ Force3 =  par[:mass]*grav*cos(theta)*cos(phi)+0.5*par[:rho]*Va^2*par[:S_wing]*(C
 Torque2 = 0.5*par[:rho]*Va^2*par[:S_wing]*par[:c]*(par[:C_m_0] + par[:C_m_alpha]*alpha + (par[:C_m_q]*par[:c]*q/(2*Va)) + par[:C_m_delta_e]*delta_e);
 # Torque3 = 0.5*par[:rho]*Va^2*par[:S_wing]*par[:b]*(par[:C_n_0] + par[:C_n_beta]*beta + (par[:C_n_p]*par[:b]*p/(2*Va)) + (par[:C_n_r]*par[:b]*r/(2*Va)) + par[:C_n_delta_a]*delta_a + par[:C_n_delta_r]*delta_r);
 
-
+global print_iters
+print_iters+=1
 #-------- DYNAMICS --------#
 fx    = Force1
 # fy    = Force2

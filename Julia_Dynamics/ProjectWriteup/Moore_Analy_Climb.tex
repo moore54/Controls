@@ -1,0 +1,146 @@
+
+\documentclass[10pt,english]{article}
+\usepackage[bottom=0.8in,margin=0.8in]{geometry}
+\geometry{a4paper}
+\usepackage[english]{babel}
+%\usepackage{indentfirst}
+\selectlanguage{english}
+\usepackage{multicol}
+%\usepackage{varioref}% smart page, figure, table, and equation referencing
+\usepackage[colorlinks]{hyperref}% hyperlinks [must be loaded after dropping]
+\hypersetup{colorlinks,breaklinks,
+citecolor = blue,
+urlcolor=blue,
+linkcolor=blue}
+\usepackage[noabbrev]{cleveref}
+\usepackage{float}
+
+\usepackage{placeins}
+\usepackage[utf8]{inputenc}
+
+%Julia input
+\usepackage[T1]{fontenc}
+\usepackage{beramono}
+\usepackage{listings}
+\usepackage[usenames,dvipsnames]{xcolor}
+
+\definecolor{myred}{RGB}{200,50,50}
+\definecolor{mycomments}{RGB}{75,100,175}
+
+%%
+%% Julia definition (c) 2014 Jubobs
+%%
+\lstdefinelanguage{Julia}%
+{morekeywords={abstract,break,case,catch,const,continue,do,else,elseif,%
+		end,export,false,for,function,immutable,import,importall,if,in,%
+		macro,module,otherwise,quote,return,switch,true,try,type,typealias,%
+		using,while},%
+	sensitive=true,%
+	alsoother={\$},%
+	morecomment=[l]\#,%
+	morecomment=[n]{\#=}{=\#},%
+	morestring=[s]{"}{"},%
+	morestring=[m]{'}{'},%
+}[keywords,comments,strings]%
+
+\lstset{%
+	language       		 	  = Julia,
+	basicstyle           	  = \ttfamily,
+	tabsize				    	 =2,
+	breaklines			 	 =true,
+	keywordstyle     	 = \bfseries\color{myred},
+	stringstyle      	 	  = \color{magenta},
+	commentstyle    	= \color{mycomments},
+	showstringspaces = false,
+}
+% End Julia input
+
+\usepackage{graphicx}
+
+\usepackage{amssymb}
+\usepackage{authblk}
+\graphicspath{{../figures/}} % allows figures to be placed in a different folder
+
+
+\title{\vspace{-20pt}Analytical Derivation and Verification of Aircraft Roll, Transition, and Climb Relations through Dynamic Optimization }
+\author{Kevin R. Moore}
+\affil{\vspace{-10pt}Brigham Young University}
+\renewcommand\Authands{, }
+\date{\today}
+
+\begin{document}
+
+\maketitle
+
+\section{Contour Plots}
+%
+%\begin{figure}[H]
+%\centering
+%\includegraphics[trim={.0cm 0.5cm .0cm 0cm},clip,width=0.9\textwidth]{p_contour4}
+%\vspace{-5pt}
+%\caption{Pressure contour of finest solution with 4096 nodes.}
+%\label{f:3b}
+%\end{figure}
+
+
+
+\noindent Norm of pressure correction was used as the main convergence criteria calculated as:
+    \begin{equation}
+      L = m g \, cos(\gamma)
+    \end{equation}
+
+    \begin{equation}    
+     \dot{V_a} =\dot{V_x} = \dot{V_y} = 0
+    \end{equation}
+    
+        \begin{equation}    
+     T-D = m g \, sin(\gamma)
+    \end{equation}
+    
+           \begin{equation}    
+     \gamma = sin^{-1}\Bigg(\frac{T-D}{mg}\Bigg)
+    \end{equation}
+    
+               \begin{equation}    
+     power = T V_a
+    \end{equation}
+    
+    \begin{equation}    
+    V_a = \sqrt{\frac{2 m g}{C_L \rho S_{ref} \sqrt{(1+\frac{h}{d})^2}}}
+    \end{equation}
+    
+               \begin{equation}    
+C_D = \frac{C_L^2}{pi e_{wing} AR} + C_{Dp}
+    \end{equation}
+    
+               \begin{equation}    
+         D = C_D 0.5 \rho V_a^2 S_{ref}
+    \end{equation}
+    
+        \begin{equation}    
+d = h \sqrt{(\frac{m g}{T-D})^2-1}
+    \end{equation}
+
+\noindent Analytical pressure and U-Velocity profile was calculated by:
+\begin{equation}
+            L = Out-In
+\end{equation}
+\begin{equation}
+            D_H = 2 (Top-Bot)
+            \end{equation}
+            \begin{equation}
+            Re_D = \rho U_0 D_H / \mu
+            \end{equation}
+            \begin{equation}
+            f = 24/Re_D
+            \end{equation}
+            \begin{equation}
+            \frac{\Delta p}{\Delta x} = \frac{4 f L (0.5 \rho U_0^2)}{L D_H}
+            \end{equation}
+            \begin{equation}
+            u_{analytical} = \frac{{\Delta p}/{\Delta x}}{(2 \mu) y (Top-y)}
+            \end{equation}
+
+
+
+\end{document}

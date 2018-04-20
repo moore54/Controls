@@ -15,7 +15,7 @@ P[:delta_t] = 0.2
 
 P[:ground_threshold] = 2000.0
 P[:power_weight] = 10.0
-P[:thrust_weight] = 0.5
+P[:thrust_weight] = 0.0
 
 P[:gravity] = 9.8
 
