@@ -120,7 +120,7 @@ P[:sigma_w] = .7
 
 # compute trim conditions using 'mavsim_chap5_trim.slx'
 # initial airspeed
-P[:Va0] = 17
+P[:Va0] = 17.0
 gamma_angle = 0*pi/180  # desired flight path angle (radians)
 R     = Inf         # desired radius (m) - use (+) for right handed orbit,
 P[:lambda] = 100

@@ -84,7 +84,7 @@ linkcolor=blue}
 
 
 
-\noindent Norm of pressure correction was used as the main convergence criteria calculated as:
+\noindent Takeoff
     \begin{equation}
       L = m g \, cos(\gamma)
     \end{equation}
@@ -94,11 +94,11 @@ linkcolor=blue}
     \end{equation}
     
         \begin{equation}    
-     T-D = m g \, sin(\gamma)
+     T-D = m g \, \sin(\gamma)
     \end{equation}
     
            \begin{equation}    
-     \gamma = sin^{-1}\Bigg(\frac{T-D}{mg}\Bigg)
+     \gamma = \sin^{-1}\Bigg(\frac{T-D}{mg}\Bigg)
     \end{equation}
     
                \begin{equation}    
@@ -110,7 +110,7 @@ linkcolor=blue}
     \end{equation}
     
                \begin{equation}    
-C_D = \frac{C_L^2}{pi e_{wing} AR} + C_{Dp}
+C_D = \frac{C_L^2}{\pi e_{wing} AR} + C_{Dp}
     \end{equation}
     
                \begin{equation}    
@@ -119,6 +119,46 @@ C_D = \frac{C_L^2}{pi e_{wing} AR} + C_{Dp}
     
         \begin{equation}    
 d = h \sqrt{(\frac{m g}{T-D})^2-1}
+    \end{equation}
+    
+    
+ Transition
+                \begin{equation}    
+V_a = constant
+    \end{equation}
+    
+                    \begin{equation}    
+T = constant
+    \end{equation}
+    
+                \begin{equation}    
+F_x = -D \cos{\gamma} - L \sin{\gamma} + T \cos{\theta} 
+    \end{equation}
+    
+            \begin{equation}    
+F_y = L \cos{\gamma} - D \sin{\gamma} + T \sin{\theta} - m g
+    \end{equation}
+    
+            \begin{equation}    
+F_c = \frac{m V_a^2}{r}
+    \end{equation}
+    
+                \begin{equation}    
+|\dot{V_x}| = -|\dot{V_y}| 
+    \end{equation}
+    
+    
+                    \begin{equation}    
+x = r \cos{\gamma_{sc}}
+    \end{equation}
+    
+                        \begin{equation}    
+y = r sin{\gamma_{sc}}
+    \end{equation}
+    
+    
+                    \begin{equation}    
+|\dot{V_x}| = -|\dot{V_y}| 
     \end{equation}
 
 \noindent Analytical pressure and U-Velocity profile was calculated by:
