@@ -130,8 +130,8 @@ function obj(x,ds,h_set,dt,distance,optimize,scale,P)
 
         # figure("path")
         # plot(savestates[:,1],-savestates[:,2],".-")
-        # xlabel("pn (m)")
-        # ylabel("-pd (m)")
+        # xlabel("Distance (m)")
+        # ylabel("Height (m)")
     end
 
     if optimize
@@ -209,6 +209,7 @@ args2 = []
 optimize = []
 savestates = []
 time_sim = []
+t_save = zeros(PW_array)
 errorsum = zeros(PW_array)
 mean_thrust2weight = zeros(PW_array)
 total_energy = zeros(PW_array)
@@ -300,48 +301,48 @@ for i = 1:length(PW_array)
     figname = "d_CL"
     figure(figname)
     plot(savestates[:,1],CL,".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
-    ylabel("CL")
+    xlabel("Distance (m)")
+    ylabel("Lift Coefficient")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
     figname = "d_CD"
     figure(figname)
     plot(savestates[:,1],CD,".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
-    ylabel("CD")
+    xlabel("Distance (m)")
+    ylabel("Drag Coefficient")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
     figname = "d_q"
     figure(figname)
     plot(savestates[:,1],savestates[:,6],".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
-    ylabel("q")
+    xlabel("Distance (m)")
+    ylabel("Pitch Rate")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
     figname = "d_theta"
     figure(figname)
     plot(savestates[:,1],savestates[:,5]*180/pi,".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
-    ylabel("theta (deg)")
+    xlabel("Distance (m)")
+    ylabel("Pitch (deg)")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
     figname = "d_AOA"
     figure(figname)
     plot(savestates[:,1],alpha_save,".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
-    ylabel("AOA (deg)")
+    xlabel("Distance (m)")
+    ylabel("Angle of Attack (deg)")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
     figname = "d_Va"
     figure(figname)
     plot(savestates[:,1],Va,".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
-    ylabel("Va (m/s)")
+    xlabel("Distance (m)")
+    ylabel("Airspeed (m/s)")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
     # ylim(0,32)
@@ -350,8 +351,8 @@ for i = 1:length(PW_array)
     figure(figname)
     plot(savestates[:,1],-savestates[:,2],".-",label = "$(PW_array[i]) | $((TW_array[i]))")
     # plot(x_an,y_an,"-",label = "analytical $(round.(PW_array[i],4))")
-    xlabel("pn (m)")
-    ylabel("-pd (m)")
+    xlabel("Distance (m)")
+    ylabel("Height (m)")
     # axis("equal")
     # xlim(minimum(savestates[:,1]),maximum(savestates[:,1]))
     # ylim(minimum(-savestates[:,2]),maximum(-savestates[:,2]))
@@ -371,7 +372,7 @@ for i = 1:length(PW_array)
     figname = "t_T"
     figure(figname)
     plot(time_sim,savestates[:,end]./(P[:mass]*P[:gravity]),".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("time (s)")
+    xlabel("Time (s)")
     ylabel("Thrust/Weight")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
@@ -381,15 +382,15 @@ for i = 1:length(PW_array)
     figname = "d_power"
     figure(figname)
     plot(savestates[:,1],power./(P[:mass]*P[:gravity]),".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
-    ylabel("Power/weight")
+    xlabel("Distance (m)")
+    ylabel("Power/Weight")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
     figname = "d_delta_e"
     figure(figname)
     plot(savestates[:,1],xopt[2:21],".-",label = "$(PW_array[i]) | $((TW_array[i]))")
-    xlabel("pn (m)")
+    xlabel("Distance (m)")
     ylabel("Elevator Deflection (deg)")
     legend(loc="center left", title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
     savefig("./figures/free_analytical/$figname.pdf",transparent = true)
@@ -399,6 +400,8 @@ for i = 1:length(PW_array)
     T_spl = Dierckx.Spline1D(savestates[:,1],savestates[:,end])
     t_spl = Dierckx.Spline1D(savestates[:,1],time_sim)
     P_spl = Dierckx.Spline1D(time_sim,power)
+
+    t_save[i] = time_sim[end]
     #
     args2 = (alt_spl,h_set)
     dist_at_height = 0.0
@@ -420,7 +423,7 @@ figname = "errorsum"
 figure(figname)
 plot(PW_array,errorsum,".-",label = "$(round.(PW_array,4))")
 xlabel("Power/Weight Constraint")
-ylabel("errorsum")
+ylabel("Error Sum")
 savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 figname = "total_energy"
@@ -472,8 +475,10 @@ function mini_path(vars,y_spl,x_num,y_end,Va,P,optimize,h_set)
     # alpha = maximum(alpha_save*pi/180)
 
     G = linspace(0,gama,100)-pi/2
+    Fy = (L+T*sin(alpha)-P[:mass]*P[:gravity])
+    Fx = (-D+T*cos(alpha))
 
-    r = P[:mass]*Va^2/(L+T*sin(alpha)-P[:mass]*P[:gravity])
+    r = P[:mass]*Va^2/Fx
 
     arclength = r*gama
     t_tr = arclength/Va
@@ -572,7 +577,7 @@ for i = 1:length(PW_array)
     y_end = -savestates[end,2]
 
     Va = sqrt.(savestates[:,3].^2+savestates[:,4].^2)
-    Va = maximum(Va)
+    Va = mean(Va)
 
     Va_save_num[i] = Va
 
@@ -585,24 +590,30 @@ for i = 1:length(PW_array)
     alpha_an[i] = xopt[1]
     T_an[i] = xopt[2]*100
     Va_save_an[i] = xopt[3]*10
-    T_num[i] = maximum(savestates[:,7])
-    alpha_num_plot[i] = maximum(alpha_num[:,i])
+    T_num[i] = mean(savestates[:,7])
+    alpha_num_plot[i] = mean(alpha_num[:,i])
 
+    rc("figure", figsize=(7.5, 2.5))
+    rc("figure.subplot", left=0.17, bottom=0.21, top=0.97, right=.68)
     figname = "pn_pd_compare"
     figure(figname)
-    plot(savestates[:,1],-savestates[:,2],"o-",color = plot_colors[i],label = "dynamic $(round.(PW_array[i],4))")
-    plot(x_an,y_an,"-",color = plot_colors[i],label = "analytical $(round.(PW_array[i],4))")
-    legend(loc="center left",bbox_to_anchor=(1, 0.5))
-    xlabel("pn (m)")
-    ylabel("-pd (m)")
+    plot(savestates[:,1],-savestates[:,2],"o-",color = plot_colors[i],label = "dynamic $(PW_array[i]) | $((TW_array[i]))")
+    plot(x_an,y_an,"-",color = plot_colors[i],label = "analytical $(PW_array[i]) | $((TW_array[i]))")
+    legend(loc="center left",title = "Power/Weight | Thrust/Weight",bbox_to_anchor=(1, 0.5))
+    xlabel("Distance (m)")
+    ylabel("Height (m)")
+    savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 end
 
+rc("figure", figsize=(7.5, 2.0))
+rc("figure.subplot", left=0.17, bottom=0.21, top=0.97, right=.69)
+
 figname = "total_energy_compare"
 figure(figname)
-plot(PW_array,total_energy/(P[:mass]*P[:gravity]),".-",label = "Numerical")
 plot(PW_array,energy_an/(P[:mass]*P[:gravity]),".-",label = "Analytical")
-legend(loc = "best")
+plot(PW_array,total_energy/(P[:mass]*P[:gravity]),".-",label = "Numerical")
+legend(loc="center left",bbox_to_anchor=(1, 0.5))
 xlabel("Power/Weight Constraint")
 ylabel("Energy/Weight (J/N)")
 savefig("./figures/free_analytical/$figname.pdf",transparent = true)
@@ -610,19 +621,19 @@ savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 figname = "alpha_compare"
 figure(figname)
-plot(PW_array,alpha_num_plot,".-",label = "Numerical")
 plot(PW_array,alpha_an*180/pi,".-",label = "Analytical")
-legend(loc = "best")
+plot(PW_array,alpha_num_plot,".-",label = "Numerical")
+legend(loc="center left",bbox_to_anchor=(1, 0.5))
 xlabel("Power/Weight Constraint")
-ylabel("AOA (deg)")
+ylabel("Angle of Attack (deg)")
 savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 figname = "T_compare"
 figure(figname)
-plot(PW_array,T_num,".-",label = "Numerical")
 plot(PW_array,T_an,".-",label = "Analytical")
-legend(loc = "best")
+plot(PW_array,T_num,".-",label = "Numerical")
+legend(loc="center left",bbox_to_anchor=(1, 0.5))
 xlabel("Power/Weight Constraint")
 ylabel("Thrust (N)")
 savefig("./figures/free_analytical/$figname.pdf",transparent = true)
@@ -630,9 +641,19 @@ savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 figname = "Va_compare"
 figure(figname)
-plot(PW_array,Va_save_num,".-",label = "Numerical")
 plot(PW_array,Va_save_an,".-",label = "Analytical")
-legend(loc = "best")
+plot(PW_array,Va_save_num,".-",label = "Numerical")
+legend(loc="center left",bbox_to_anchor=(1, 0.5))
 xlabel("Power/Weight Constraint")
-ylabel("Air Speed (m/s)")
+ylabel("Airspeed (m/s)")
+savefig("./figures/free_analytical/$figname.pdf",transparent = true)
+
+
+figname = "time_compare"
+figure(figname)
+plot(PW_array,energy_an./(Va_save_an.*T_an),".-",label = "Analytical")
+plot(PW_array,t_save,".-",label = "Numerical")
+legend(loc="center left",bbox_to_anchor=(1, 0.5))
+xlabel("Power/Weight Constraint")
+ylabel("Time (s)")
 savefig("./figures/free_analytical/$figname.pdf",transparent = true)
