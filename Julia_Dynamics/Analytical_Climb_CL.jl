@@ -140,78 +140,78 @@ for j = 1:N_CL
 
    figname = "TW_analytical"
    PyPlot.figure(figname)
-   PyPlot.plot(TW_plot,height./dist_plot,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Thrust / Weight (N/N)")
-   PyPlot.ylabel("Slope (h/d)")
-   ylim([-.1,5])
+   PyPlot.plot(TW_plot,flight_angle_plot*180/pi,".-",label = "$(round(CL_array[j],3))")
+   PyPlot.xlabel("Thrust/Weight")
+   PyPlot.ylabel("Flight Path Angle (deg)")
+   # ylim([-.1,5])
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    # figname = "Net_TW_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot((TW_plot.*weight-D_perc_plot.*TW_plot.*weight)/weight,height./dist_plot,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Net Thrust / Weight (N/N)")
+   # PyPlot.xlabel("Net Thrust/Weight (N/N)")
    # PyPlot.ylabel("Slope (h/d)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    figname = "D_perc_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(TW_plot,D_perc_plot*100,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Thrust / Weight")
+   PyPlot.xlabel("Thrust/Weight")
    PyPlot.ylabel("Drag Percent of Thrust (%)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    # figname = "Net_D_perc_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot((TW_plot.*weight-D_perc_plot.*TW_plot.*weight)/weight,D_perc_plot*100,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Net Thrust / Weight")
+   # PyPlot.xlabel("Net Thrust/Weight")
    # PyPlot.ylabel("Drag Percent of Thrust (%)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    figname = "flight_angle_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(TW_plot,flight_angle_plot*180/pi,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Thrust / Weight")
+   PyPlot.xlabel("Thrust/Weight")
    PyPlot.ylabel("Flight Path Angle (deg)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 
    figname = "flight_angle_power_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(PW_plot,flight_angle_plot*180/pi,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Power / Weight")
+   PyPlot.xlabel("Power/Weight")
    PyPlot.ylabel("Flight Path Angle (deg)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 
    # figname = "net_flight_angle_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot((TW_plot.*weight-D_perc_plot.*TW_plot.*weight)/weight,flight_angle_plot*180/pi,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Net Thrust / Weight")
+   # PyPlot.xlabel("Net Thrust/Weight")
    # PyPlot.ylabel("Flight Path Angle (deg)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 
    # figname = "Va_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot(TW_plot,Va_plot,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Thrust / Weight")
+   # PyPlot.xlabel("Thrust/Weight")
    # PyPlot.ylabel("Flight Speed Va (m/s)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    figname = "Va_dist_analytical"
@@ -220,7 +220,7 @@ for j = 1:N_CL
    PyPlot.xlabel("Flight Speed Va (m/s)")
    PyPlot.ylabel("Slope (h/d)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 
@@ -228,57 +228,57 @@ for j = 1:N_CL
    figname = "Va_power_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(PW_plot,Va_plot,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Power / Weight")
+   PyPlot.xlabel("Power/Weight")
    PyPlot.ylabel("Flight Speed Va (m/s)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 
    figname = "Va_TW_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(TW_plot,Va_plot,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Thrust / Weight")
+   PyPlot.xlabel("Thrust/Weight")
    PyPlot.ylabel("Flight Speed Va (m/s)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    figname = "Power_thrust_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(TW_plot,PW_plot,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Thrust / Weight")
-   PyPlot.ylabel("Power / Weight")
+   PyPlot.xlabel("Thrust/Weight")
+   PyPlot.ylabel("Power/Weight")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    # figname = "Power_power_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot(PW_plot,Power_plot,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Power / Weight")
+   # PyPlot.xlabel("Power/Weight")
    # PyPlot.ylabel("Power (Watts)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    figname = "Power_dist_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(PW_plot,height./dist_plot,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Power / Weight")
+   PyPlot.xlabel("Power/Weight")
    PyPlot.ylabel("Slope (h/d)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 
    # figname = "AOA_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot(TW_plot,alpha_plot*180/pi,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Thrust / Weight")
+   # PyPlot.xlabel("Thrust/Weight")
    # PyPlot.ylabel("AOA (deg)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    # figname = "AOA_Va_analytical"
@@ -287,7 +287,7 @@ for j = 1:N_CL
    # PyPlot.xlabel("Va (m/s)")
    # PyPlot.ylabel("AOA (deg)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
 
@@ -299,34 +299,34 @@ for j = 1:N_CL
    PyPlot.ylabel("Energy/Weight (J/N)")
    PyPlot.ylim([10,15])
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    figname = "Energy_TW_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(TW_plot,energy_plot/(mass*gravity),".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Thrust / Weight")
+   PyPlot.xlabel("Thrust/Weight")
    PyPlot.ylabel("Energy / Weight (J/N)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    # figname = "Energy_PW_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot(PW_plot,energy_plot,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Power / Weight")
+   # PyPlot.xlabel("Power/Weight")
    # PyPlot.ylabel("Energy (J)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    # figname = "Time_TW_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot(TW_plot,time_plot,".-",label = "$(round(CL_array[j],3))")
-   # PyPlot.xlabel("Thrust / Weight")
+   # PyPlot.xlabel("Thrust/Weight")
    # PyPlot.ylabel("Time (s)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    # figname = "Time_Va_analytical"
@@ -335,7 +335,7 @@ for j = 1:N_CL
    # PyPlot.xlabel("Va (m/s)")
    # PyPlot.ylabel("Time (s)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    # figname = "Time_Power_analytical"
@@ -344,7 +344,7 @@ for j = 1:N_CL
    # PyPlot.xlabel("Power (w)")
    # PyPlot.ylabel("Time (s)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    # figname = "Time_Dist_analytical"
@@ -353,16 +353,16 @@ for j = 1:N_CL
    # PyPlot.xlabel("Time (s)")
    # PyPlot.ylabel("Distance (m)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
    #
 
    figname = "TW_Vc_analytical"
    PyPlot.figure(figname)
    PyPlot.plot(TW_plot,height./time_plot,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Thrust / Weight")
+   PyPlot.xlabel("Thrust/Weight")
    PyPlot.ylabel("Climb Rate (m/s)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    # figname = "Power_Vc_analytical"
@@ -371,25 +371,25 @@ for j = 1:N_CL
    # PyPlot.xlabel("Power/Weight")
    # PyPlot.ylabel("Climb Rate (m/s)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    figname = "NetPower_Vc_analytical"
    PyPlot.figure(figname)
    PyPlot.plot((PW_plot.*weight-D_perc_plot.*TW_plot.*weight.*Va_plot)/weight,height./time_plot,".-",label = "$(round(CL_array[j],3))")
-   PyPlot.xlabel("Net Power / Weight ")
+   PyPlot.xlabel("Net Power/Weight ")
    PyPlot.ylabel("Climb Rate (m/s)")
    legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 
    # figname = "Energy3D_analytical"
    # PyPlot.figure(figname)
    # PyPlot.plot3D(TW_plot,energy_plot,dist_plot,".-",label = "$(round(CL_array[j],3))")
    # PyPlot.zlabel("Climb Distance (m)")
-   # PyPlot.xlabel("Thrust / Weight")
+   # PyPlot.xlabel("Thrust/Weight")
    # PyPlot.ylabel("Energy (J)")
    # legend(loc="center left", title = "CL",bbox_to_anchor=(1, 0.5))
-   #PyPlot.savefig("./figures/free_analytical/$figname.png",transparent = true)
+   #PyPlot.savefig("./figures/free_analytical/$figname.pdf",transparent = true)
 
 end
