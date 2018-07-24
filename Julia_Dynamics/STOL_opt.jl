@@ -99,8 +99,8 @@ function obj(x,ds,h_set,dt,distance,optimize,scale,P)
     C_maxheight = h_set - (maximum(-savestates[end,2]))
     # C_endslope = -savestates[end,2]-(-savestates[end-1,2])
     C_power = power/(P[:mass]*P[:gravity])-P[:power_weight]
-    # Cvel_max = Va-integ_1.p[:Va0]*10.0001
-    C = [C_maxheight;C_vel/10;C_minheight;C_turnback/10;C_power]
+    Cvel_max = Va-integ_1.p[:Va0]*1.01
+    C = [C_maxheight;C_vel/10;C_minheight;C_turnback/10;C_power;Cvel_max]
     # println("3")
     # println(sqrt(integ_1.u[3]^2+integ_1.u[4]^2))
 
@@ -471,14 +471,15 @@ function mini_path(vars,y_spl,x_num,y_end,Va,P,optimize,h_set)
     CD = P[:C_D_p] + (CL)^2/(pi*P[:e]*P[:AR])
     D = (CD)*0.5*P[:rho]*Va^2*P[:S_wing]
     gama = asin((T-D)/(P[:mass]*P[:gravity]))
-    gamad = gama*180/pi
+    # gamad = gama*180/pi
     # alpha = maximum(alpha_save*pi/180)
 
     G = linspace(0,gama,100)-pi/2
-    Fy = (L+T*sin(alpha)-P[:mass]*P[:gravity])
-    Fx = (-D+T*cos(alpha))
+    # Fy = L*cos(gama) - D*sin(gama) + T*sin(alpha+gama) - P[:mass]*P[:gravity]
+    # Fx = -D*cos(gama) - L*sin(gama) + T*cos(alpha+gama)
+    Fl = L - P[:mass]*P[:gravity]*cos(gama) + T*sin(alpha)
 
-    r = P[:mass]*Va^2/Fx
+    r = P[:mass]*Va^2/Fl
 
     arclength = r*gama
     t_tr = arclength/Va

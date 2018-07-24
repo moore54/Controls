@@ -206,6 +206,37 @@ E = \frac{T h }{\sin(\gamma)}
 
 \section{Transition}
 
+Using Newton's second law (\cref{eq:newton}, we have an expression for the acceleration $\dot{V}$ as a function of force $F$ and mass $m$.  Next we formulate the aircraft body forces in \cref{eq:Fx,eq:Fy} including drag $D$, lift $L$, thrust $T$, flight path angle $\gamma$, pitch angle $\theta$, and gravity $g$.  For this simple example, we keep the thrust in line with the aircraft body axis and do not include the effects of angle of attack on thrust.  
+
+\begin{equation}
+\label{eq:newton}
+\dot{V} = \frac{F}{m}
+\end{equation}
+
+\begin{equation}
+\label{eq:Fx}
+F_x = -D \cos(\gamma) - L \sin(\gamma) + T \cos(\theta)
+\end{equation}
+
+\begin{equation}
+\label{eq:Fy}
+F_y = L \cos(\gamma) - D \sin(\gamma) + T \sin(\theta) - m g
+\end{equation}
+
+
+Using similar triangles, we can use the alternative geometric form for the flight path angle to derive the expression for the rate change in flight path angle $\dot{\gamma}$ in \cref{eq:angledot1}.  Using the equations for force and acceleration in \cref{eq:newton,eq:Fx,eq:Fy} and inserting them into \cref{eq:angledot1}, we simplify the expression to \cref{eq:angledot}.  This final equation for the rate change in flight path angle is not easily integrated analytically due to the time derivative of the flight path angle and the nonlinearity of the inverse tangent, sines, and cosines.  If we assume a constant lift, airspeed, angle of attack, drag, and thrust during the maneuver, the equation becomes simple enough to be applied to a Taylor series expansion with three terms for the inverse tangent.  However, this method still results in an expression for the time integral that is several hundred terms in length.  If we could solve for the 
+
+        \begin{equation}
+\label{eq:angledot1}
+\gamma = \tan^{-1} \Bigg(\frac{V_y}{V_x} \Bigg) => \dot{\gamma} = \tan^{-1} \Bigg(\frac{\dot{V_y}}{\dot{V_x}} \Bigg)
+\end{equation}
+
+        
+        \begin{equation}
+\label{eq:angledot}
+\dot{\gamma} = \tan^{-1} \Bigg(\frac{L \cos(\gamma) - D \sin(\gamma) + T \sin(\theta)- m g}{-D \cos(\gamma) - L \sin(\gamma) + T \cos(\theta)}\Bigg)
+\end{equation}
+
 To fully characterize the transition path, one could use the x and y components of force and Newton's second law and numerically integrate to find the exact path over time.  However, this method cannot be reasonably integrated analytically due to the nonlinearity of the dynamic equations.  I will show this in the following example:
 
 If we allow for acceleration in the x and y directions and apply Newton's second law as shown in equation \ref{eq:newton}, we can get relations for the x and y accelerations (including equations \ref{eq:Fx} and \ref{eq:Fy}).
